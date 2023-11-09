@@ -42,6 +42,15 @@ const hiddenDocTypes = (listItem: ListItemBuilder) => {
   ].includes(id)
 }
 
+// If you add document types to desk structure manually, you can add them to this function to prevent duplicates in the root pane
+const visibleDocTypes = (listItem: ListItemBuilder) => {
+  const id = listItem.getId()
+
+  if (!id) {
+    return false
+  }
+}
+
 export const structure: StructureResolver = (S, context) =>
   S.list()
     .title('Content')
@@ -57,4 +66,19 @@ export const structure: StructureResolver = (S, context) =>
       settings(S, context),
       S.divider(),
       ...S.documentTypeListItems().filter(hiddenDocTypes),
+    ])
+
+export const shopStructure: StructureResolver = (S, context) =>
+  S.list()
+    .title('Content')
+    .items([
+      home(S, context),
+      S.divider(),
+      S.divider(),
+      pages(S, context),
+      S.divider(),
+      S.divider(),
+      settings(S, context),
+
+      ...S.documentTypeListItems().filter(visibleDocTypes),
     ])

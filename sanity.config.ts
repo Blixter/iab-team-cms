@@ -1,8 +1,8 @@
 import {defineConfig, isDev} from 'sanity'
 
 import {deskTool} from 'sanity/desk'
-import {schemaTypes} from './schemas'
-import {structure} from './desk'
+import {schemaTypes, shopSchemaTypes} from './schemas'
+import {shopStructure, structure} from './desk'
 
 import {visionTool} from '@sanity/vision'
 import {colorInput} from '@sanity/color-input'
@@ -12,36 +12,69 @@ import {customDocumentActions} from './plugins/customDocumentActions'
 
 const devOnlyPlugins = [visionTool()]
 
-export default defineConfig({
-  name: 'default',
-  title: 'iab-team-cms',
+export default defineConfig([
+  {
+    name: 'default',
+    title: 'Default',
 
-  projectId: 't5ebf1k4',
-  dataset: 'production',
+    projectId: 't5ebf1k4',
+    dataset: 'production',
+    basePath: '/default',
+    plugins: [
+      deskTool({structure}),
+      colorInput(),
+      imageHotspotArrayPlugin(),
+      customDocumentActions(),
+      media(),
+      ...(isDev ? devOnlyPlugins : []),
+    ],
 
-  plugins: [
-    deskTool({structure}),
-    colorInput(),
-    imageHotspotArrayPlugin(),
-    customDocumentActions(),
-    media(),
-    ...(isDev ? devOnlyPlugins : []),
-  ],
+    schema: {
+      types: schemaTypes,
+    },
 
-  schema: {
-    types: schemaTypes,
-  },
-
-  form: {
-    file: {
-      assetSources: (previousAssetSources) => {
-        return previousAssetSources.filter((assetSource) => assetSource !== mediaAssetSource)
+    form: {
+      file: {
+        assetSources: (previousAssetSources) => {
+          return previousAssetSources.filter((assetSource) => assetSource !== mediaAssetSource)
+        },
+      },
+      image: {
+        assetSources: (previousAssetSources) => {
+          return previousAssetSources.filter((assetSource) => assetSource === mediaAssetSource)
+        },
       },
     },
-    image: {
-      assetSources: (previousAssetSources) => {
-        return previousAssetSources.filter((assetSource) => assetSource === mediaAssetSource)
+  },
+  {
+    name: 'shop',
+    title: 'Shop',
+    projectId: 't5ebf1k4',
+    dataset: 'production',
+    basePath: '/shop',
+    plugins: [
+      deskTool({shopStructure}),
+      // imageHotspotArrayPlugin(),
+      // customDocumentActions(),
+      // media(),
+      // ...(isDev ? devOnlyPlugins : []),
+    ],
+
+    schema: {
+      types: shopSchemaTypes,
+    },
+
+    form: {
+      file: {
+        assetSources: (previousAssetSources) => {
+          return previousAssetSources.filter((assetSource) => assetSource !== mediaAssetSource)
+        },
+      },
+      image: {
+        assetSources: (previousAssetSources) => {
+          return previousAssetSources.filter((assetSource) => assetSource === mediaAssetSource)
+        },
       },
     },
   },
-})
+])

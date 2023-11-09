@@ -81,6 +81,10 @@ import shopifyProductVariant from './objects/shopify/shopifyProductVariant'
 // Collections
 import collectionGroup from './objects/collection/group'
 import collectionLinks from './objects/collection/links'
+import shop from './documents/shops/shop'
+import deliveryTime from './documents/shops/deliveryTime'
+import printingLocation from './documents/shops/printingLocation'
+import store from './documents/shops/store'
 
 const objects = [
   customProductOptionColor,
@@ -132,4 +136,9 @@ const objects = [
   collectionLinks,
 ]
 
+const shopDocuments = [shop, deliveryTime, printingLocation, store]
+const shopObjects = [linkExternal]
+
 export const schemaTypes = [...annotations, ...singletons, ...objects, ...blocks, ...documents]
+
+export const shopSchemaTypes = [...shopDocuments, ...shopObjects]
